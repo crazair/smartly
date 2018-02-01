@@ -11,7 +11,7 @@
 
     <name>smartly</name>
 
-    <url></url>
+    <url>https://github.com/crazair/smartly</url>
 
     <licenses>
         <license>
@@ -28,6 +28,7 @@
         <junit.jupiter.version>5.1.0-M2</junit.jupiter.version>
         <junit.platform.version>1.1.0-M2</junit.platform.version>
         <log4j.version>1.2.17</log4j.version>
+        <selenide.version>4.10.01</selenide.version>
     </properties>
 
     <build>
@@ -65,6 +66,13 @@
     </build>
 
     <dependencies>
+        <!-- JUnit Jupiter API for writing tests -->
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
         <!-- Core package for the JUnit Jupiter test engine -->
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
         <dependency>
@@ -87,6 +95,13 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+        <!-- UI Testing Framework powered by Selenium WebDriver -->
+        <!-- https://mvnrepository.com/artifact/com.codeborne/selenide -->
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide</artifactId>
+            <version>${selenide.version}</version>
         </dependency>
     </dependencies>
 

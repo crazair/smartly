@@ -7,9 +7,9 @@ public class BaseTest extends ContextPageObject {
 
     @BeforeAll
     public void before() {
+        ctx.open();
         log.info("BaseTest before");
         System.setProperty("selenide.browser", "chrome");
-        ctx.open();
     }
 
     @AfterAll
@@ -17,5 +17,4 @@ public class BaseTest extends ContextPageObject {
         log.info("BaseTest after");
         ctx.quit();
     }
-
 }

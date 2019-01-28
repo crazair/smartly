@@ -6,8 +6,8 @@
 
     <groupId>ru.sbtqa.smartly</groupId>
     <artifactId>smartly</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <version>2.0</version>
+    <packaging>pom</packaging>
 
     <name>smartly</name>
 
@@ -21,14 +21,24 @@
     </licenses>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
-        <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
-        <junit.jupiter.version>5.1.0-M2</junit.jupiter.version>
-        <junit.platform.version>1.1.0-M2</junit.platform.version>
+        <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
+        <maven.install.plugin.version>2.3.1</maven.install.plugin.version>
+
         <log4j.version>1.2.17</log4j.version>
-        <selenide.version>4.10.01</selenide.version>
+
+        <selenide.version>5.1.0</selenide.version>
+        <junit.jupiter.version>5.1.0</junit.jupiter.version>
+        <junit.platform.version>1.0.2</junit.platform.version>
+        <allure-junit5.version>2.6.0</allure-junit5.version>
+        <aspectj.version>1.8.10</aspectj.version>
+        <java-hamcrest.version>2.0.0.0</java-hamcrest.version>
+
+        <testpath>**/testsuites/*.java</testpath>
+        <tags>SMOKE</tags>
+        <excludeTags></excludeTags>
     </properties>
 
     <build>
@@ -43,16 +53,28 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
-
-            <!--Плагин surefire реализует всю магию по исполнению юнит тестов-->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <includes>
-                        <include></include>
+                        <include>${testpath}</include>
                     </includes>
                     <testFailureIgnore>true</testFailureIgnore>
+                    <properties>
+                        <includeTags>${tags}</includeTags>
+                        <excludeTags>${excludeTags}</excludeTags>
+                    </properties>
+                    <systemProperties>
+                        <property>
+                            <name>allure.results.directory</name>
+                            <value>./allure-results</value>
+                        </property>
+                        <property>
+                            <name>allure.link.issue.pattern</name>
+                            <value>http://jira.ru/browse/{}</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -60,48 +82,115 @@
                         <artifactId>junit-platform-surefire-provider</artifactId>
                         <version>${junit.platform.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.junit.vintage</groupId>
+                        <artifactId>junit-vintage-engine</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-api</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-params</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-launcher</artifactId>
+                        <version>${junit.platform.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>${maven.install.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>install-oracle-jdbc</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <groupId>com.oracle</groupId>
+                            <artifactId>ojdbc6</artifactId>
+                            <version>11.2.0.3</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                            <createChecksum>true</createChecksum>
+                            <file>${project.basedir}/src/test/resources/lib/ojdbc6-11.2.0.3.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
+    <reporting>
+        <excludeDefaults>true</excludeDefaults>
+        <plugins>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.9</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <dependencies>
-        <!-- JUnit Jupiter API for writing tests -->
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
-        </dependency>
-        <!-- Core package for the JUnit Jupiter test engine -->
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- JUnit Jupiter extension for parameterized tests -->
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
-        <!-- Fast and flexible logging framework (APIs) written in Java -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
         </dependency>
-        <!-- UI Testing Framework powered by Selenium WebDriver -->
-        <!-- https://mvnrepository.com/artifact/com.codeborne/selenide -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure-junit5.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>java-hamcrest</artifactId>
+            <version>${java-hamcrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.54</version>
+        </dependency>
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
             <version>${selenide.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
         </dependency>
     </dependencies>
 

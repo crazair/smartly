@@ -1,7 +1,7 @@
 # smartly
-#### Фреймворк для автоматизированного тестирования веб-приложений
+### Фреймворк для автоматизированного тестирования веб-приложений
 
-###**Selenide && ContextPageObject**
+# Selenide && ContextPageObject
 
     _JUnit 5_     - библиотека запуска и работы с автотестами на языке Java
     _Selenide 4_  - фреймворк-обёртка вокруг Selenium WebDriver
@@ -34,20 +34,18 @@
 
 | Ключ                    |Описание                                 | Обязательность
 | ------------------------|-----------------------------------------|----------------
-| url                     | ссылка на стенд                         | Да (Для UI тестов)
-| login                   | логин пользователя                      | Да (Для UI тестов)
-| pass                    | пароль пользователя                     | Да (Для UI тестов)
-| webdriver.drivers.path  | путь к вебдрайверу                      | Да (Для UI тестов)
-| selenide.browser        | браузер                                 | Да (Для UI тестов)
-| timeoutMilliseconds     | таймаут для спинера                     | Да (Для UI тестов)
-| clientINN               | ИНН тестового клиента                   | Да (Для UI тестов)
+| url                     | ссылка на стенд                         | Да 
+| login                   | логин пользователя                      | Да 
+| pass                    | пароль пользователя                     | Да 
+| selenide.browser        | браузер                                 | Да 
+| timeoutMilliseconds     | таймаут                                 | Да 
+| clientINN               | ИНН тестового клиента                   | Да 
 
 Пример "ключ=значение":
 
-    url=http://l4b.ovsat.ca.sbrf.ru/azimuth/resource/loans-for-business/index-new.html
-    login=super_user
-    pass=super_user1
-    webdriver.drivers.path=src/test/resources/webdrivers/chromedriver-0.0.1.exe
+    url=http://127.0.0.1/index-new.html
+    login=user
+    pass=user1
     selenide.browser=chrome
     timeoutMilliseconds=60000
     clientINN=7708754456

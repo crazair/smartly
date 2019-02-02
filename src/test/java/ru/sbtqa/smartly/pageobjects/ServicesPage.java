@@ -77,7 +77,6 @@ public class ServicesPage extends BasePage {
         clickLinkOrButtonByNameInModal("Выбрать шаблон");
     }
 
-    //TODO Пока временно сделаю так, после переделаю Pylnov
     @Step("Добавляем фактическую операцию для ВКЛ")
     public void addManualFactOperationVKL(String factOpDate, String processName, String factOpName){
         selectInTable("Обязательство");

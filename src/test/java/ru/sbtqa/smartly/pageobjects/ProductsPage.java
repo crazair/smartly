@@ -20,25 +20,6 @@ public class ProductsPage extends BasePage {
         selectInTable(agreementNumber);
     }
 
-    @Step("Выбираем продукт по ID ЕКС <{0}>")
-    public void selectProductBySourceID(String sourceID) {
-        long elapsedTime = System.currentTimeMillis() + 5 * 60 * 1000; // Ждем ID до 5 минут
-        long startTime = System.currentTimeMillis();
-
-        setValueByName("ID ЕКС", sourceID);
-        clickLinkOrButtonByName("Применить");
-
-        while ($$x("//div[@class='table__cell-content'][text()='" + sourceID + "']").size() == 0) {
-            sleep(3000);
-            clickLinkOrButtonByName("Применить");
-            if (System.currentTimeMillis() > elapsedTime) {
-                throw new IllegalStateException("ID ЕКС не пришел в ППРБ за 5 минут");
-            }
-        }
-        LOG.info("ID ЕКС пришел в ППРБ за " + ((System.currentTimeMillis() - startTime) / 1000) + " секунд");
-        selectInTable(sourceID);
-    }
-
     @Step("На вкладке \"Продукты\" в фильтрах вводим Номер договора {0} в <Фильтры>")
     public void setAgreementNumber(String value) {
         setValueByName("Номер договора", value);
@@ -54,7 +35,7 @@ public class ProductsPage extends BasePage {
         return table.find(xpath("//tbody//tr")).getText();
     }
 
-    @Step("Выбираем продукт по номеру договора ЕКС <{0}>")
+    @Step("Выбираем продукт по номеру договора")
     public SelenideElement selectProductBySrcId(String srcId) {
         waitSpinner();
         setValueByName("ID ЕКС", srcId);

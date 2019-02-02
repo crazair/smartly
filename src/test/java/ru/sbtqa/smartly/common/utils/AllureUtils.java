@@ -11,13 +11,11 @@ import java.util.Properties;
 
 import static ru.sbtqa.smartly.common.utils.PropertyUtils.prop;
 
-/**
- * Утилитный класс для работы с Allure FW
- */
+/** Утилитный класс для работы с Allure FW */
 public final class AllureUtils {
 
     public static final Logger LOG = Logger.getRootLogger();
-    private static final String PATH_ENV_PROP = "../allure-results/";
+    private static final String PATH_ENV_PROP = "target/allure-results/";
     private static final String NAME_ENV_FILE = PATH_ENV_PROP + "environment.properties";
 
     private AllureUtils() throws IllegalAccessException {

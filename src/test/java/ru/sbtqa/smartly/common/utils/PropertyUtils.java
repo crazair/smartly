@@ -18,7 +18,7 @@ public final class PropertyUtils {
     /** ссылка на файл настроек приложения */
     private static final String APP_PROPERTIES_URL = "app.properties";
     /** ссылка на файл настроек log4j */
-    private static final String LOG4J_PROPERTIES_URL = "log4j.properties";
+    private static final String LOG4J_PROPERTIES_URL = "target/test-classes/log4j.properties";
     /** кодировка файла настроек по-умолчанию */
     private static final Charset APP_PROPERTIES_CHARSET = Charset.forName("UTF-8");
 

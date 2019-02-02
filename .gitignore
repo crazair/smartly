@@ -28,6 +28,7 @@ out
 gen
 .target
 target
+build
 
 #Gradle files
 .gradle

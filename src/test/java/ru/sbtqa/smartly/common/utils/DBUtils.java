@@ -6,6 +6,7 @@ import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import oracle.jdbc.driver.OracleDriver;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -39,15 +40,14 @@ public class DBUtils {
 
     static {
         try {
-            //DriverManager.registerDriver(new OracleDriver());
-            DriverManager.registerDriver(null);
+            DriverManager.registerDriver(new OracleDriver());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Метод для получения значения из БД ЕКС
+     * Метод для получения значения из БД
      *
      * @param statement - SQL-запрос
      **/
@@ -56,8 +56,7 @@ public class DBUtils {
              Statement sqlStatement = connection.createStatement();
              ResultSet resultSet = sqlStatement.executeQuery(statement)) {
 
-            if (resultSet.next())
-                return resultSet.getString(1) == null ? "" : resultSet.getString(1);
+            if (resultSet.next()) return resultSet.getString(1) == null ? "" : resultSet.getString(1);
         } catch (SQLException e) {
             LOG.error("DBUtils executeStatement SQLException: ", e);
         }
@@ -65,12 +64,12 @@ public class DBUtils {
     }
 
     /**
-     * Метод ожидает указанного статуса в базе ЕКС
+     * Метод ожидает указанного статуса в базе
      *
      * @param productNumber - номер договора
      * @param state         - ожидаемый статус
      **/
-    public static void waitDocStateInEKS(String productNumber, String state) {
+    public static void waitDocStateIn(String productNumber, String state) {
         long elapsedTime = System.currentTimeMillis() + TIMEOUT;
         String sqlStatement = "select C_NAME from z#COM_STATUS_PRD where ID = " +
                 "(select C_COM_STATUS from z#PRODUCT WHERE C_NUM_DOG = '" + productNumber + "' AND CLASS_ID = 'KRED_CORP')";
@@ -87,7 +86,7 @@ public class DBUtils {
     }
 
     /**
-     * Метод ожидает появления запроса на создание КД в таблице входящих запросов ЕКС
+     * Метод ожидает появления запроса на создание КД в таблице входящих запросов
      *
      * @param productNumber - номер договора
      **/
@@ -123,7 +122,7 @@ public class DBUtils {
     }
 
     /**
-     * Метод возвращает операционный день схемы ЕКС
+     * Метод возвращает операционный день
      **/
     public static String getOperDay(String branchCode) {
         return LocalDate.parse(executeStatement("SELECT C_OP_DATE FROM Z#BRANCH WHERE C_CODE = " + branchCode),
@@ -134,9 +133,9 @@ public class DBUtils {
      * Метод запускает процедуру обработки над указанным договором
      *
      * @param productNumber - номер договора
-     * @return eksId - метод возвращает ID ЕКС
+     * @return eksId - метод возвращает ID
      **/
-    @Step("Запускаем обработчик для продукта {0}")
+    @Step("Запускаем обработчик для продукта")
     public static String processProduct(String productNumber) {
         waitCreateRequest(productNumber);
         LOG.info("Запускаем обработчик для продукта " + productNumber);
@@ -198,7 +197,7 @@ public class DBUtils {
     }
 
     /**
-     * @param scriptName  - имя файла скрипта в каталоге scripts/eks/SQLScripts/
+     * @param scriptName  - имя файла скрипта в каталоге scripts/
      * @param target      - атибут, который заменяем в скрипте
      * @param replacement - чем заменяем
      */
@@ -207,7 +206,7 @@ public class DBUtils {
         CompletableFuture future = CompletableFuture.runAsync(() -> {
             try {
                 String body = FileUtils.readFileToString(
-                        new File(DBUtils.class.getClassLoader().getResource("scripts/eks/SQLScripts/" + scriptName).toURI()), "UTF-8")
+                        new File(DBUtils.class.getClassLoader().getResource("scripts/" + scriptName).toURI()), "UTF-8")
                         .replace(target, replacement);
                 executeStatement(body);
             } catch (Exception e) {
@@ -332,7 +331,7 @@ public class DBUtils {
      * @param statement    - SQL-запрос, получающий нужную таблицу
      * @param isNumbered   - таблица пронумерована в UI? (Если true - метод вернет пронумерованную таблицу)
      * @param headingsMap  - объект Map, в котором ключ - название столбца в БД, значение - название столбца в UI
-     * @param formatDigits - приводить числа из БД к формату интерфейса ППРБ (# ###,##)?
+     * @param formatDigits - приводить числа из БД к формату интерфейса (# ###,##)?
      * @return объект Table
      */
     public static Table createTable(String statement, boolean isNumbered, Map<String, String> headingsMap, boolean formatDigits) {

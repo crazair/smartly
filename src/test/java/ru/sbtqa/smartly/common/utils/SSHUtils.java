@@ -10,7 +10,6 @@ import static ru.sbtqa.smartly.common.utils.PropertyUtils.prop;
 /**
  * Утилитный класс для работы по ssh с удаленными серверами
  */
-
 public class SSHUtils {
 
     private static final int SSH_PORT = Integer.parseInt(prop("sshPort"));
